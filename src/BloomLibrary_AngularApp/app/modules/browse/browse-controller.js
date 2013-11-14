@@ -4,20 +4,24 @@ angular.module('BloomLibraryApp.browse')
 	.controller('BrowseCtrl', ['$scope', '$dialog', '$timeout', 'bookService', 
 	                           function ($scope, $dialog, $timeout, bookService) {
 
-	 bookService.getAllBooks().then(function (allBooks) {
+	 bookService.getAllBooksCount().then(function (count) {
 	    $scope.numPerPage = 8;
-        $scope.noOfPages = Math.ceil(allBooks.length / $scope.numPerPage);
+        $scope.noOfPages = Math.ceil(count / $scope.numPerPage);
         $scope.currentPage = 1;
+		$scope.bookCount = count;
         $scope.setPage = function () { };
-        $scope.books = allBooks;
       });
 
-      $scope.visibleBooks = [];
-      $scope.queryBooks = function() {
-          bookService.getAllBooks().then(function (result) {
-              $scope.books = result;
-          });
-      }; // TODO: Think about combination of filters with listview pages: 10 items per page, but filtered?
+	  // browse.tpl.html listview div configures this to be called as getVisibleItems when user chooses a page.
+	  // the listview first configures visItemsFirst and numPerPage.
+	  // Todo: should get Filtered book range.
+	  $scope.getPage = function () {
+		  if (!$scope.visItemsFirst)
+			  $scope.visItemsFirst = 0; // in case not initialized, make it a number
+		  bookService.getBookRange($scope.visItemsFirst, $scope.numPerPage).then(function(result) {
+			  $scope.visibleBooks = result;
+		  })
+	  };
 
 	  $scope.foo = function(paramOne, paramTwo) {
 		  return paramOne + paramTwo;

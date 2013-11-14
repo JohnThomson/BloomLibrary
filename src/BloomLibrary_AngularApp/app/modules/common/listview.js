@@ -8,14 +8,16 @@ angular.module('palaso.ui.listview', ['ui.bootstrap'])
 			replace : true,
 			template : '<div class="listview" ng-hide="hideIfEmpty && items.length == 0"><div ng-transclude></div><div class="paginationblock"><pagination boundary-links="true" num-pages="noOfPages" current-page="currentPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination><div class="right pagination">Items per page: <select ng-model="itemsPerPage"><option value="3">3</option><option value="5" selected>5</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></div></div></div>',
 			scope : {
-				search : "&",
 				select : "&",
 				items: "=",
 				hideIfEmpty: "@",
-				visibleItems: "=",
+				visItemsFirst: "=",
+				numPerPage: "=",
 				filterSearchString: "=",
 				filter: "=",
+				bookCount: "=",
 				filterComparator: "&",
+				getVisibleItems: "&" // html has getVisibleItems="getItems(start, length)"; getItems updates visibleItems.
 			},
 			controller: ["$scope", function($scope) {
 				$scope.noOfPages = 3;  // TODO: calculate this automatically
@@ -50,13 +52,13 @@ angular.module('palaso.ui.listview', ['ui.bootstrap'])
 					var sliceEnd;
 					if ($scope.currentPage) {
 						sliceStart = ($scope.currentPage-1) * $scope.itemsPerPage; // currentPage is 1-based
-						sliceEnd = $scope.currentPage * $scope.itemsPerPage;
 					} else {
 						// Default to page 1 if undefined
 						sliceStart = 0;
-						sliceEnd = $scope.itemsPerPage;
 					}
-					$scope.visibleItems = $scope.filteredItems.slice(sliceStart, sliceEnd);
+					$scope.visItemsFirst = sliceStart;
+					$scope.numPerPage = $scope.itemsPerPage; // Review: can we merge these??
+					$scope.getVisibleItems();
 				}
 				this.filterPages = function() {
 					if (!$scope.filterSearchString) {
@@ -72,7 +74,7 @@ angular.module('palaso.ui.listview', ['ui.bootstrap'])
 					}
 				};
 				this.updatePages = function() {
-					$scope.noOfPages = Math.ceil($scope.filteredItems.length / $scope.itemsPerPage);
+					$scope.noOfPages = Math.ceil($scope.bookCount / $scope.itemsPerPage);
 					if ($scope.currentPage > $scope.noOfPages) {
 						// This can happen if items have been deleted, for example
 						$scope.currentPage = $scope.noOfPages;
@@ -93,9 +95,7 @@ angular.module('palaso.ui.listview', ['ui.bootstrap'])
 					} else {
 						$scope.comparatorFunc = undefined;
 					}
-					$scope.search();
-					this.filterPages();
-					this.updatePages();
+					this.updateVisibleItems();
 //					$scope.search({
 //						term : $scope.term
 //					});
