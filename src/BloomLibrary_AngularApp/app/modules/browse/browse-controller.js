@@ -13,7 +13,6 @@ angular.module('BloomLibraryApp.browse')
       });
 
 	  // browse.tpl.html listview div configures this to be called as getVisibleItems when user chooses a page.
-	  // the listview first configures visItemsFirst and numPerPage.
 	  // Todo: should get Filtered book range.
 	  $scope.getPage = function (first, count) {
 		  bookService.getBookRange(first, count).then(function(result) {
@@ -25,21 +24,8 @@ angular.module('BloomLibraryApp.browse')
 		  return paramOne + paramTwo;
 	  }
       
-        
-      //$scope.updatePageControl = function () {
-      //    $timeout(function ()   	bloomService.getAllBooks().then(function (allBooks) {
-      $scope.numPerPage = 8;
-//      $scope.noOfPages = Math.ceil(allBooks.length / $scope.numPerPage);
-      //wait for 'filteredBooks' to be changed
-      //        $scope.noOfPages = Math.ceil($scope.filteredBooks.length / $scope.numPerPage);
-      //        $scope.currentPage = 1;
-      //        $scope.setPage = function (pageNo) {
-      //            $scope.currentPage = pageNo;
-      //        };
-      //    }, 10);
-      //};
+
       $scope.updatePageControl = function () {
-          $scope.noOfPages = Math.ceil($scope.filteredBooks.length / $scope.numPerPage);
           $scope.currentPage = 1;
           $scope.setPage = function (pageNo) {
               $scope.currentPage = pageNo;
@@ -48,18 +34,22 @@ angular.module('BloomLibraryApp.browse')
       }
 
       $scope.SearchNow = function () {
+		  // Todo: this needs to run a query on the real database and update bookCount
+		  // and do something to make the listview invoke getPage (even if the bookCount
+		  // does not change).
           $scope.searchText = $scope.searchTextRaw;
       }
-      $scope.matchingBooks = function (book) {
-          if (!$scope.searchText)
-              return true;
-          var s = $scope.searchText.toLowerCase();
-          var titleMatch = book.volumeInfo.title.toLowerCase().indexOf(s) != -1;
-          var tagMatch = _.contains(book.Tags, s);
-          var x = book.volumeInfo.authors.join().toLowerCase();
-          var authorMatch = book.volumeInfo.authors.join().toLowerCase().indexOf(s) > -1;
-          //$timeout(function () { $scope.updatePageControl()}, 1000);
-          return titleMatch | tagMatch | authorMatch;
-      };
+		// This may be a helpful starting point for setting up filtering
+//      $scope.matchingBooks = function (book) {
+//          if (!$scope.searchText)
+//              return true;
+//          var s = $scope.searchText.toLowerCase();
+//          var titleMatch = book.volumeInfo.title.toLowerCase().indexOf(s) != -1;
+//          var tagMatch = _.contains(book.Tags, s);
+//          var x = book.volumeInfo.authors.join().toLowerCase();
+//          var authorMatch = book.volumeInfo.authors.join().toLowerCase().indexOf(s) > -1;
+//          //$timeout(function () { $scope.updatePageControl()}, 1000);
+//          return titleMatch | tagMatch | authorMatch;
+//      };
   }]);
 

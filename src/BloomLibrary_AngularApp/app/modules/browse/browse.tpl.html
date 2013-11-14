@@ -9,7 +9,7 @@
                 </button>
             </div>
         </form>
-		<div listview class="results" hide-if-empty="false" items="visibleBooks" book-count="bookCount" filter="matchingBooks" filter-search-string="searchText" equals="3" get-visible-items="getPage(first, count)" vis-items-first="visItemsFirst" num-per-page="numPerPage">
+		<div listview class="results" hide-if-empty="false" book-count="bookCount" get-visible-items="getPage(first, count)">
             <!--<li class="col-xs-12 col-sm-4 col-md-2" id="Li2"-->
             <div class="result"
                 ng-repeat="book in visibleBooks">
