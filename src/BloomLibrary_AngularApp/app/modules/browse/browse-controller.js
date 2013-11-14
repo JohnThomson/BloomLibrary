@@ -5,8 +5,6 @@ angular.module('BloomLibraryApp.browse')
 	                           function ($scope, $dialog, $timeout, bookService) {
 
 	 bookService.getAllBooksCount().then(function (count) {
-	    $scope.numPerPage = 8;
-        $scope.noOfPages = Math.ceil(count / $scope.numPerPage);
         $scope.currentPage = 1;
 		$scope.bookCount = count;
         $scope.setPage = function () { };
