@@ -9,7 +9,8 @@
                 </button>
             </div>
         </form>
-		<div listview class="results" hide-if-empty="false" book-count="bookCount" get-visible-items="getPage(first, count)">
+        <div>matches: {{filteredBookCount}}</div>
+		<div listview class="results" hide-if-empty="false" item-count="bookCount" page-items-function="getBookRange(first, itemsPerPage)">
             <!--<li class="col-xs-12 col-sm-4 col-md-2" id="Li2"-->
             <div class="result"
                 ng-repeat="book in visibleBooks">

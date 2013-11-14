@@ -6,12 +6,12 @@ angular.module('palaso.ui.listview', ['ui.bootstrap'])
 			restrict : 'EA',
 			transclude : true,
 			replace : true,
-			template : '<div class="listview" ng-hide="hideIfEmpty && bookCount == 0"><div ng-transclude></div><div class="paginationblock"><pagination boundary-links="true" num-pages="noOfPages" current-page="currentPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination><div class="right pagination">Items per page: <select ng-model="itemsPerPage"><option value="3">3</option><option value="5" selected>5</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></div></div></div>',
+			template : '<div class="listview" ng-hide="hideIfEmpty && itemCount == 0"><div ng-transclude></div><div class="paginationblock"><pagination boundary-links="true" num-pages="noOfPages" current-page="currentPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination><div class="right pagination">Items per page: <select ng-model="itemsPerPage"><option value="3">3</option><option value="5" selected>5</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></div></div></div>',
 			scope : {
 				select : "&",
 				hideIfEmpty: "@",
-				bookCount: "=",
-				getVisibleItems: "&" // html has getVisibleItems="getPage(start, length)"; sets list to show in view.
+				itemCount: "=",
+				pageItemsFunction: "&" // e.g. html has pageItemsFunction="getBookRange(first, itemsPerPage)"; sets list to show in view.
 			},
 			controller: ["$scope", function($scope) {
 				$scope.noOfPages = 3;  // TODO: calculate this automatically
@@ -48,10 +48,10 @@ angular.module('palaso.ui.listview', ['ui.bootstrap'])
 						// Default to page 1 if undefined
 						sliceStart = 0;
 					}
-					$scope.getVisibleItems({first:sliceStart, count:$scope.itemsPerPage});
+					$scope.pageItemsFunction({first:sliceStart, itemsPerPage:$scope.itemsPerPage});
 				}
 				this.updatePages = function() {
-					$scope.noOfPages = Math.ceil($scope.bookCount / $scope.itemsPerPage);
+					$scope.noOfPages = Math.ceil($scope.itemCount / $scope.itemsPerPage);
 					if ($scope.currentPage > $scope.noOfPages) {
 						// This can happen if items have been deleted, for example
 						$scope.currentPage = $scope.noOfPages;
@@ -75,7 +75,7 @@ angular.module('palaso.ui.listview', ['ui.bootstrap'])
 					controller.updatePages();
 					controller.updateVisibleItems();
 				});
-				scope.$watch('bookCount', function() {
+				scope.$watch('itemCount', function() {
 					controller.updatePages();
 					controller.updateVisibleItems();
 				}, true);

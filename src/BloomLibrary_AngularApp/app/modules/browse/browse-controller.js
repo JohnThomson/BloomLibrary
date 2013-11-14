@@ -8,15 +8,23 @@ angular.module('BloomLibraryApp.browse')
         $scope.currentPage = 1;
 		$scope.bookCount = count;
         $scope.setPage = function () { };
+		 $scope.filteredBookCount = count;
       });
 
-	  // browse.tpl.html listview div configures this to be called as getVisibleItems when user chooses a page.
+	  // browse.tpl.html listview div configures this to be called as pageItemsFunction when user chooses a page.
 	  // Todo: should get Filtered book range.
-	  $scope.getPage = function (first, count) {
+	  $scope.getBookRange = function (first, count) {
 		  bookService.getBookRange(first, count).then(function(result) {
 			  $scope.visibleBooks = result;
 		  })
 	  };
+
+	  $scope.getFiteredBookCount = function(searchString)
+	  {
+		  bookService.getFiteredBookCount(searchString).then(function(result) {
+			  $scope.filteredBookCount = result;
+		  })
+	  }
 
 	  $scope.foo = function(paramOne, paramTwo) {
 		  return paramOne + paramTwo;
@@ -33,9 +41,10 @@ angular.module('BloomLibraryApp.browse')
 
       $scope.SearchNow = function () {
 		  // Todo: this needs to run a query on the real database and update bookCount
-		  // and do something to make the listview invoke getPage (even if the bookCount
+		  // and do something to make the listview invoke getBookRange (even if the bookCount
 		  // does not change).
           $scope.searchText = $scope.searchTextRaw;
+		  $scope.getFiteredBookCount($scope.searchText);
       }
 		// This may be a helpful starting point for setting up filtering
 //      $scope.matchingBooks = function (book) {
