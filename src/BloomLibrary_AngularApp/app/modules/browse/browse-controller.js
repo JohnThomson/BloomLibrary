@@ -15,10 +15,8 @@ angular.module('BloomLibraryApp.browse')
 	  // browse.tpl.html listview div configures this to be called as getVisibleItems when user chooses a page.
 	  // the listview first configures visItemsFirst and numPerPage.
 	  // Todo: should get Filtered book range.
-	  $scope.getPage = function () {
-		  if (!$scope.visItemsFirst)
-			  $scope.visItemsFirst = 0; // in case not initialized, make it a number
-		  bookService.getBookRange($scope.visItemsFirst, $scope.numPerPage).then(function(result) {
+	  $scope.getPage = function (first, count) {
+		  bookService.getBookRange(first, count).then(function(result) {
 			  $scope.visibleBooks = result;
 		  })
 	  };

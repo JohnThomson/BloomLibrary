@@ -58,7 +58,7 @@ angular.module('palaso.ui.listview', ['ui.bootstrap'])
 					}
 					$scope.visItemsFirst = sliceStart;
 					$scope.numPerPage = $scope.itemsPerPage; // Review: can we merge these??
-					$scope.getVisibleItems();
+					$scope.getVisibleItems({first:sliceStart, count:$scope.itemsPerPage});
 				}
 				this.filterPages = function() {
 					if (!$scope.filterSearchString) {
